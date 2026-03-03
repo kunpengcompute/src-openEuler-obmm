@@ -1,0 +1,44 @@
+#!/usr/bin/make -f
+
+# See debhelper(7) (uncomment to enable).
+# Output every command that modifies files on the build system.
+#export DH_VERBOSE = 1
+
+
+# See FEATURE AREAS in dpkg-buildflags(1).
+#export DEB_BUILD_MAINT_OPTIONS = hardening=+all
+
+# See ENVIRONMENT in dpkg-buildflags(1).
+# Package maintainers to append CFLAGS.
+#export DEB_CFLAGS_MAINT_APPEND  = -Wall -pedantic
+# Package maintainers to append LDFLAGS.
+#export DEB_LDFLAGS_MAINT_APPEND  = -Wl,--as-needed
+
+
+%:
+	dh $@
+
+
+override_dh_auto_build:
+	cmake -DCMAKE_INSTALL_PREFIX:PATH=build .
+	make
+
+
+override_dh_auto_install:
+	dh_auto_install --destdir=debian/tmp
+	mkdir -p -m755 debian/tmp/usr/lib/
+	mkdir -p -m755 debian/tmp/usr/include/
+	install -m 755 libobmm.so.1.0.1 debian/tmp/usr/lib/libobmm.so.1.0.1
+	install -m 644 libobmm.h debian/tmp/usr/include/
+	ln -sf libobmm.so.1 debian/tmp/usr/lib/libobmm.so
+	ln -sf libobmm.so.1.0.1 debian/tmp/usr/lib/libobmm.so.1
+
+
+override_dh_auto_clean:
+	rm -rf build
+
+# dh_make generated override targets.
+# This is an example for Cmake (see <https://bugs.debian.org/641051>).
+#override_dh_auto_configure:
+#	dh_auto_configure -- \
+#	-DCMAKE_LIBRARY_PATH=$(DEB_HOST_MULTIARCH)
