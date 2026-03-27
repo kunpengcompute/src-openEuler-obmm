@@ -1,0 +1,35 @@
+From 0ae400a8fbe022ed5a1f6d50c9b1de9af91f41ba Mon Sep 17 00:00:00 2001
+From: GaoChao <gaochao24@huawei.com>
+Date: Thu, 29 Jan 2026 20:06:13 +0800
+Subject: [PATCH 07/18] fix: remove unused parameter warnings in vendor_adaptor
+
+Mark unused parameters with (void) to suppress compiler warnings:
+- vendor_cleanup_import_cmd: unused 'cmd' parameter
+- vendor_cleanup_preimport_cmd: unused 'cmd' parameter
+
+These functions are stub implementations for cleanup operations.
+---
+ src/libobmm/vendor_adaptor.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/src/libobmm/vendor_adaptor.c b/src/libobmm/vendor_adaptor.c
+index c7d86ff..c22c70a 100644
+--- a/src/libobmm/vendor_adaptor.c
++++ b/src/libobmm/vendor_adaptor.c
+@@ -270,6 +270,7 @@ int vendor_fixup_import_cmd(struct obmm_cmd_import *cmd)
+ 
+ void vendor_cleanup_import_cmd(struct obmm_cmd_import *cmd)
+ {
++    (void)cmd;
+ }
+ 
+ int vendor_fixup_preimport_cmd(struct obmm_cmd_preimport *cmd)
+@@ -289,4 +290,5 @@ int vendor_fixup_preimport_cmd(struct obmm_cmd_preimport *cmd)
+ 
+ void vendor_cleanup_preimport_cmd(struct obmm_cmd_preimport *cmd)
+ {
++    (void)cmd;
+ }
+-- 
+2.43.0
+
