@@ -1,8 +1,8 @@
-Name:          libobmm
+Name:          obmm
 Version:       1.0.1
-Release:       1
-Summary:       Runtime libobmm for Huawei OBMM driver
-License:       GPLv2
+Release:       2
+Summary:       Runtime library for Huawei OBMM driver
+License:       Mulan PSL v2
 
 Source0: %{name}-%{version}.tar.gz
 ExclusiveArch: aarch64
@@ -12,19 +12,24 @@ BuildRequires: cmake
 BuildRequires: gcc
 BuildRequires: cmake-filesystem
 
+Obsoletes:      libobmm < %{version}-%{release}
+Provides:       libobmm = %{version}-%{release}
+
 %global debug_package %{nil}
 
 %global soversion 1
 
 %package devel
-Summary:        Development files Huawei OBMM driver
+Summary:        Development files for Huawei OBMM driver
 Requires:       %{name} = %{version}-%{release}
+Obsoletes:      libobmm-devel < %{version}-%{release}
+Provides:       libobmm-devel = %{version}-%{release}
 
 %description
 This package contains the OBMM library.
 
 %description devel
-This package contains the development files Huawei OBMM driver
+This package contains the development files for Huawei OBMM driver
 
 %prep
 %setup -n %{name}-%{version}
@@ -43,21 +48,13 @@ echo "Version check passed: %{version}"
 %build
 mkdir -p build
 cd build
-
 cmake ../src/libobmm \
-	-DCMAKE_INSTALL_PREFIX=%{_prefix} \
-	-DCMAKE_INSTALL_LIBDIR=%{_libdir} \
-
-make
+	-DCMAKE_INSTALL_PREFIX=%{_prefix}
+%make_build
 
 %install
-rm -rf %{buildroot}
-
 cd build
-make install DESTDIR=%{buildroot}
-
-%clean
-rm -rf ${RPM_BUILD_ROOT}
+%make_install DESTDIR=%{buildroot}
 
 %files
 %defattr(-,root,root,-)
@@ -70,6 +67,10 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_libdir}/libobmm.so
 
 %changelog
+* Wed May 20 2026 Yuhao Zhang <yuhao.zhang@huawei.com> - 1.0.1-2
+- Rename package from libobmm to obmm
+- Add Obsoletes and Provides for backward compatibility
+
 * Thu Mar 26 2026 Yuhao Zhang <yuhao.zhang@huawei.com> - 1.0.1-1
 - Update to v1.0.1 from upstream
 - add syslog
