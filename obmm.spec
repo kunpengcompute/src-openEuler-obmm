@@ -1,6 +1,6 @@
 Name:          obmm
 Version:       1.0.1
-Release:       2
+Release:       3
 Summary:       Runtime library for Huawei OBMM driver
 License:       Mulan PSL v2
 
@@ -67,6 +67,9 @@ cd build
 %{_libdir}/libobmm.so
 
 %changelog
+* Thu May 21 2026 Yuhao Zhang <yuhao.zhang@huawei.com> - 1.0.1-3
+- Remove old libobmm tarball
+
 * Wed May 20 2026 Yuhao Zhang <yuhao.zhang@huawei.com> - 1.0.1-2
 - Rename package from libobmm to obmm
 - Add Obsoletes and Provides for backward compatibility
