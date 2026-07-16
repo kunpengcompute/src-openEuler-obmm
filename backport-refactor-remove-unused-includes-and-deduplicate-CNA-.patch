@@ -1,0 +1,101 @@
+From 1729d71a4994e38c59fee975ec69bbb73be5a7db Mon Sep 17 00:00:00 2001
+From: GaoChao <gaochao24@huawei.com>
+Date: Thu, 5 Mar 2026 20:45:58 +0800
+Subject: [PATCH 17/18] refactor: remove unused includes and deduplicate CNA
+ validation
+
+- Remove unused includes (asm-generic/errno.h, stdatomic.h) from libobmm.c
+- Remove unused INVAL_UMMU_MAPPING macro from vendor_adaptor.c
+- Extract common CNA validation logic into validate_cna_match() helper
+
+Co-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>
+---
+ src/libobmm/libobmm.c        |  3 ---
+ src/libobmm/vendor_adaptor.c | 29 ++++++++++++-----------------
+ 2 files changed, 12 insertions(+), 20 deletions(-)
+
+diff --git a/src/libobmm/libobmm.c b/src/libobmm/libobmm.c
+index cd1ebf3..b1c3d52 100644
+--- a/src/libobmm/libobmm.c
++++ b/src/libobmm/libobmm.c
+@@ -15,13 +15,10 @@
+  * Create: 2025-10-28
+  */
+ 
+-#include <asm-generic/errno.h>
+ #include <fcntl.h>
+ #include <errno.h>
+ #include <stdio.h>
+ #include <stdatomic.h>
+-#include <stdio.h>
+-#include <stdlib.h>
+ #include <string.h>
+ #include <sys/ioctl.h>
+ #include <sys/mman.h>
+diff --git a/src/libobmm/vendor_adaptor.c b/src/libobmm/vendor_adaptor.c
+index 8c0b9c5..091f679 100644
+--- a/src/libobmm/vendor_adaptor.c
++++ b/src/libobmm/vendor_adaptor.c
+@@ -33,7 +33,6 @@
+ #define MAX_CONTROLLERS 8
+ #define MAX_PATH 256
+ #define MAX_CHAR 64
+-#define INVAL_UMMU_MAPPING (-1)
+ 
+ enum hisi_ummu_tdev_version {
+     HISI_TDEV_INFO_V1 = 0,
+@@ -272,21 +271,27 @@ void free_vendor_info(void *vendor_info)
+     free(vendor_info);
+ }
+ 
+-int vendor_fixup_import_cmd(struct obmm_cmd_import *cmd)
++static int validate_cna_match(const uint8_t *seid, uint32_t expected_scna)
+ {
+     unsigned int cna;
+-    int ret = get_primary_cna_by_eid(&cna, cmd->seid);
+-    if (ret)
++    int ret = get_primary_cna_by_eid(&cna, seid);
++    if (ret) {
+         return ret;
+-    if (cna != cmd->scna) {
++    }
++    if (cna != expected_scna) {
+         OBMM_LOGE("ctl with eid " EID_FMT64 " has scna=%#x which is different from scna=%#x.",
+-                EID_ARGS64(cmd->seid), cna, cmd->scna);
++                EID_ARGS64(seid), cna, expected_scna);
+         errno = ENODEV;
+         return -1;
+     }
+     return 0;
+ }
+ 
++int vendor_fixup_import_cmd(struct obmm_cmd_import *cmd)
++{
++    return validate_cna_match(cmd->seid, cmd->scna);
++}
++
+ void vendor_cleanup_import_cmd(struct obmm_cmd_import *cmd)
+ {
+     (void)cmd;
+@@ -294,17 +299,7 @@ void vendor_cleanup_import_cmd(struct obmm_cmd_import *cmd)
+ 
+ int vendor_fixup_preimport_cmd(struct obmm_cmd_preimport *cmd)
+ {
+-    unsigned int cna;
+-    int ret = get_primary_cna_by_eid(&cna, cmd->seid);
+-    if (ret)
+-        return ret;
+-    if (cna != cmd->scna) {
+-        OBMM_LOGE("ctl with eid " EID_FMT64 " has scna=%#x which is different from scna=%#x.",
+-                EID_ARGS64(cmd->seid), cna, cmd->scna);
+-        errno = ENODEV;
+-        return -1;
+-    }
+-    return 0;
++    return validate_cna_match(cmd->seid, cmd->scna);
+ }
+ 
+ void vendor_cleanup_preimport_cmd(struct obmm_cmd_preimport *cmd)
+-- 
+2.43.0
+
