@@ -3,7 +3,7 @@ Section: libs
 Priority: optional
 Maintainer: root <root@unknown>
 Rulers-Requires-Root: No
-Build-Depends: debhelper-compat (= 13), make, cmake, gcc, libnuma-dev, libnuma1, linux-headers-generic
+Build-Depends: debhelper-compat (= 13), make, cmake, gcc, libnuma-dev, libnuma1, linux-headers-generic, ub-os-component-dkms-dev
 Standards-Version: 4.6.2
 Homepage: https://test.org/libobmm
 #Vcs-Browser: https://salsa.debian.org/debian/libobmm
@@ -13,7 +13,7 @@ Package: libobmm-dev
 Section: libdevel
 Architecture: arm64
 Multi-Arch: same
-Depends: libobmm1 (= ${binary:Version}), ${misc:Depends}, libc6-dev | libc-dev, linux-headers-generic, linux-libc-dev
+Depends: libobmm1 (= ${binary:Version}), ${misc:Depends}, libc6-dev | libc-dev, linux-headers-generic, linux-libc-dev, ub-os-component-dkms-dev
 Description: The development package for the libobmm
 
 Package: libobmm1
