@@ -20,7 +20,7 @@
 
 
 override_dh_auto_build:
-	cmake -DCMAKE_INSTALL_PREFIX:PATH=build -DCMAKE_C_FLAGS="-I/usr/src/ub-os-component-dkms-dev/include/uapi" .
+	cmake -DCMAKE_INSTALL_PREFIX:PATH=build .
 	make
 
 
