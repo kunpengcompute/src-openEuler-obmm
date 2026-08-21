@@ -1,0 +1,13 @@
+# Mainline patches (Patch6001-Patch6009 in obmm.spec).
+backport-fix-remove-unused-parameter-warnings-in-vendor_adapt.patch
+backport-feat-add-syslog-logging-for-OBMM-operations.patch
+backport-refactor-improve-logging-placement-and-eliminate-mag.patch
+backport-fix-address-code-quality-issues-in-logging-module.patch
+backport-feat-assign-versions-in-the-spec.patch
+backport-fix-update-documentation-and-unify-logging.patch
+backport-fix-normalize-return-values-and-errno-handling.patch
+backport-refactor-implement-automatic-version-management-for-.patch
+backport-refactor-remove-unused-includes-and-deduplicate-CNA-.patch
+
+# Debian-specific: retain debug information for the automatic dbgsym package.
+fix-preserve-debug-symbols.patch

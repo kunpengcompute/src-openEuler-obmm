@@ -1,24 +1,32 @@
-Source: libobmm
+Source: obmm
 Section: libs
 Priority: optional
-Maintainer: root <root@unknown>
-Rulers-Requires-Root: No
-Build-Depends: debhelper-compat (= 13), make, cmake, gcc, libnuma-dev, libnuma1, linux-headers-generic, ub-os-component-dkms-dev
+Maintainer: Yuhao Zhang <yuhao.zhang@huawei.com>
+Rules-Requires-Root: no
+Build-Depends: debhelper-compat (= 13), make, cmake, gcc, linux-headers-generic, ub-os-component-dkms-dev
 Standards-Version: 4.6.2
-Homepage: https://test.org/libobmm
-#Vcs-Browser: https://salsa.debian.org/debian/libobmm
-#Vcs-Git: https://salsa.debian.org/debian/libobmm.git
+Homepage: https://gitcode.com/openeuler/obmm
 
-Package: libobmm-dev
+Package: obmm-dev
 Section: libdevel
 Architecture: arm64
 Multi-Arch: same
-Depends: libobmm1 (= ${binary:Version}), ${misc:Depends}, libc6-dev | libc-dev, linux-headers-generic, linux-libc-dev, ub-os-component-dkms-dev
-Description: The development package for the libobmm
+Depends: obmm (= ${binary:Version}), ${misc:Depends}, libc6-dev | libc-dev, linux-headers-generic, linux-libc-dev, ub-os-component-dkms-dev
+Provides: libobmm-dev (= ${binary:Version})
+Breaks: libobmm-dev (<< ${binary:Version})
+Replaces: libobmm-dev (<< ${binary:Version})
+Description: development files for Huawei OBMM
+ This package provides the header files and unversioned shared-library
+ symbolic link required to build applications that use libobmm.
 
-Package: libobmm1
+Package: obmm
 Section: libs
 Architecture: arm64
 Multi-Arch: same
-Depends: ${shlibs:Depends}, ${misc:Depends}, libnuma1, linux-libc-dev
-Description: The library for the libobmm
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Provides: libobmm (= ${binary:Version})
+Breaks: libobmm (<< ${binary:Version})
+Replaces: libobmm (<< ${binary:Version})
+Description: runtime library for the Huawei OBMM driver
+ This package provides libobmm, the user-space library used to communicate
+ with the Huawei OBMM kernel driver.

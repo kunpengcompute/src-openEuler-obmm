@@ -1,5 +1,7 @@
 #!/usr/bin/make -f
 
+DEB_HOST_MULTIARCH := $(shell dpkg-architecture -qDEB_HOST_MULTIARCH)
+
 # See debhelper(7) (uncomment to enable).
 # Output every command that modifies files on the build system.
 #export DH_VERBOSE = 1
@@ -20,25 +22,19 @@
 
 
 override_dh_auto_build:
-	cmake -DCMAKE_INSTALL_PREFIX:PATH=build .
-	make
+	cmake -S src/libobmm -B src/libobmm/build \
+		-DCMAKE_INSTALL_PREFIX:PATH=build
+	dh_auto_build --builddirectory=src/libobmm/build
 
 
 override_dh_auto_install:
-	dh_auto_install --destdir=debian/tmp
-	mkdir -p -m755 debian/tmp/usr/lib/
+	mkdir -p -m755 debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)/
 	mkdir -p -m755 debian/tmp/usr/include/
-	install -m 755 libobmm.so.1.0.1 debian/tmp/usr/lib/libobmm.so.1.0.1
-	install -m 644 libobmm.h debian/tmp/usr/include/
-	ln -sf libobmm.so.1 debian/tmp/usr/lib/libobmm.so
-	ln -sf libobmm.so.1.0.1 debian/tmp/usr/lib/libobmm.so.1
+	install -m 644 src/libobmm/build/libobmm.so.1.0.1 debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)/libobmm.so.1.0.1
+	install -m 644 src/libobmm/libobmm.h debian/tmp/usr/include/
+	ln -sf libobmm.so.1 debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)/libobmm.so
+	ln -sf libobmm.so.1.0.1 debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)/libobmm.so.1
 
 
 override_dh_auto_clean:
-	rm -rf build
-
-# dh_make generated override targets.
-# This is an example for Cmake (see <https://bugs.debian.org/641051>).
-#override_dh_auto_configure:
-#	dh_auto_configure -- \
-#	-DCMAKE_LIBRARY_PATH=$(DEB_HOST_MULTIARCH)
+	rm -rf src/libobmm/build
