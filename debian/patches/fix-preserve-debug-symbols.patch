@@ -1,0 +1,26 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: qiushengming <qiushengming1@huawei.com>
+Date: Fri, 21 Aug 2026 17:30:00 +0800
+Subject: [PATCH] preserve debug symbols for dbgsym package
+
+Do not strip the shared library while linking.  Keeping the debug
+information allows debhelper to extract it into the automatically
+generated -dbgsym package.
+
+---
+ src/libobmm/CMakeLists.txt | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/src/libobmm/CMakeLists.txt b/src/libobmm/CMakeLists.txt
+--- a/src/libobmm/CMakeLists.txt
++++ b/src/libobmm/CMakeLists.txt
+@@ -44,7 +44,6 @@
+ 	target_link_libraries(OBMM_SO PRIVATE gcov)
+ else()
+ 	# release version
+-	target_link_options(OBMM_SO PRIVATE -s)
+ endif()
+ 
+ install(TARGETS OBMM_SO LIBRARY DESTINATION lib64 OPTIONAL)
+-- 
+2.43.0
