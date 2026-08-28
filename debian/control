@@ -3,7 +3,7 @@ Section: libs
 Priority: optional
 Maintainer: Yuhao Zhang <yuhao.zhang@huawei.com>
 Rules-Requires-Root: no
-Build-Depends: debhelper-compat (= 13), make, cmake, gcc, linux-headers-generic, ub-os-component-dkms-dev
+Build-Depends: debhelper-compat (= 13), cmake, gcc, libc6-dev | libc-dev, linux-headers-generic, linux-libc-dev, ub-os-component-dkms-dev
 Standards-Version: 4.6.2
 Homepage: https://gitcode.com/openeuler/obmm
 
@@ -11,7 +11,7 @@ Package: obmm-dev
 Section: libdevel
 Architecture: arm64
 Multi-Arch: same
-Depends: obmm (= ${binary:Version}), ${misc:Depends}, libc6-dev | libc-dev, linux-headers-generic, linux-libc-dev, ub-os-component-dkms-dev
+Depends: obmm (= ${binary:Version}), ${misc:Depends}
 Provides: libobmm-dev (= ${binary:Version})
 Breaks: libobmm-dev (<< ${binary:Version})
 Replaces: libobmm-dev (<< ${binary:Version})
